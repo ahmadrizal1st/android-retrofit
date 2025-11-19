@@ -1,52 +1,64 @@
 package com.android.androidretrofit
 
-import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var titleTextView: TextView
-    private lateinit var bodyTextView: TextView
-    private lateinit var getDataButton: Button
+    private lateinit var postsButton: Button
+    private lateinit var commentsButton: Button
+    private lateinit var albumsButton: Button
+    private lateinit var photosButton: Button
+    private lateinit var todosButton: Button
+    private lateinit var usersButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        titleTextView = findViewById(R.id.title_textView)
-        bodyTextView = findViewById(R.id.body_textView)
-        getDataButton = findViewById(R.id.getData_button)
+        postsButton = findViewById(R.id.posts_button)
+        commentsButton = findViewById(R.id.comments_button)
+        albumsButton = findViewById(R.id.albums_button)
+        photosButton = findViewById(R.id.photos_button)
+        todosButton = findViewById(R.id.todos_button)
+        usersButton = findViewById(R.id.users_button)
 
-        getDataButton.setOnClickListener {
-            getData()
+        postsButton.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("dataType", "posts")
+            startActivity(intent)
         }
-    }
 
-    private fun getData() {
+        commentsButton.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("dataType", "comments")
+            startActivity(intent)
+        }
 
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Please wait")
-        progressDialog.show()
+        albumsButton.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("dataType", "albums")
+            startActivity(intent)
+        }
 
-        RetrofitInstance.apiInterface.getData().enqueue(object : Callback<ResponseData?> {
-            override fun onResponse(call: Call<ResponseData?>, response: Response<ResponseData?>) {
-                val responseData = response.body()
-                titleTextView.text = responseData?.title
-                bodyTextView.text = responseData?.body
-                progressDialog.dismiss()
-            }
+        photosButton.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("dataType", "photos")
+            startActivity(intent)
+        }
 
-            override fun onFailure(call: Call<ResponseData?>, t: Throwable) {
-                Toast.makeText(this@MainActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
-                progressDialog.dismiss()
-            }
-        })
+        todosButton.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("dataType", "todos")
+            startActivity(intent)
+        }
+
+        usersButton.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("dataType", "users")
+            startActivity(intent)
+        }
     }
 }

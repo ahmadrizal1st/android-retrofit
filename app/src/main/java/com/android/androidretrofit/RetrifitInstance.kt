@@ -10,7 +10,7 @@ object RetrofitInstance {
             .build()
     }
 
-    val apiInterface by lazy {
+    val apiInterface: ApiInterface by lazy {
         retrofit.create(ApiInterface::class.java)
     }
 }
