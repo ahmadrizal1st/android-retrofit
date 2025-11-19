@@ -2,10 +2,12 @@ package com.android.androidretrofit.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.android.androidretrofit.R
 import com.android.androidretrofit.api.RetrofitInstance
 import com.android.androidretrofit.model.Album
@@ -27,6 +29,10 @@ class ListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_list)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         listView = findViewById(R.id.listView)
         dataType = intent.getStringExtra("dataType") ?: "posts"
 
@@ -44,6 +50,16 @@ class ListActivity : AppCompatActivity() {
             intent.putExtra("dataType", dataType)
             intent.putExtra("itemId", position + 1) // Assuming IDs start from 1
             startActivity(intent)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

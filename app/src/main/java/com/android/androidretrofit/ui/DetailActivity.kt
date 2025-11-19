@@ -2,8 +2,10 @@ package com.android.androidretrofit.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.android.androidretrofit.R
 import com.android.androidretrofit.api.RetrofitInstance
 import com.android.androidretrofit.model.Post
@@ -21,6 +23,10 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_detail)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val detailTitle = findViewById<TextView>(R.id.detail_title)
         val detailBody = findViewById<TextView>(R.id.detail_body)
@@ -170,5 +176,15 @@ class DetailActivity : AppCompatActivity() {
                 bodyView.text = t.message ?: "Unknown error"
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
