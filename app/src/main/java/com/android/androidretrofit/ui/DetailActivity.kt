@@ -1,118 +1,173 @@
-package com.android.androidretrofit
+package com.android.androidretrofit.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.androidretrofit.R
+import com.android.androidretrofit.api.RetrofitInstance
+import com.android.androidretrofit.model.Post
+import com.android.androidretrofit.model.Comment
+import com.android.androidretrofit.model.Album
+import com.android.androidretrofit.model.Photo
+import com.android.androidretrofit.model.Todo
+import com.android.androidretrofit.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class DetailActivity : AppCompatActivity() {
 
-    private lateinit var detailTextView: TextView
-    private lateinit var dataType: String
-    private var id: Int = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        detailTextView = findViewById(R.id.detail_textView)
-        dataType = intent.getStringExtra("dataType") ?: "posts"
-        id = intent.getIntExtra("id", 1)
+        val detailTitle = findViewById<TextView>(R.id.detail_title)
+        val detailBody = findViewById<TextView>(R.id.detail_body)
 
-        when (dataType) {
-            "posts" -> fetchPost(id)
-            "comments" -> fetchComment(id)
-            "albums" -> fetchAlbum(id)
-            "photos" -> fetchPhoto(id)
-            "todos" -> fetchTodo(id)
-            "users" -> fetchUser(id)
+        val itemId = intent.getIntExtra("itemId", -1)
+        val dataType = intent.getStringExtra("dataType")
+
+        if (itemId != -1 && dataType != null) {
+            when (dataType) {
+                "posts" -> fetchPost(itemId, detailTitle, detailBody)
+                "comments" -> fetchComment(itemId, detailTitle, detailBody)
+                "albums" -> fetchAlbum(itemId, detailTitle, detailBody)
+                "photos" -> fetchPhoto(itemId, detailTitle, detailBody)
+                "todos" -> fetchTodo(itemId, detailTitle, detailBody)
+                "users" -> fetchUser(itemId, detailTitle, detailBody)
+            }
         }
     }
 
-    private fun fetchPost(id: Int) {
+    private fun fetchPost(id: Int, titleView: TextView, bodyView: TextView) {
         RetrofitInstance.apiInterface.getPostById(id).enqueue(object : Callback<Post> {
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                val post = response.body()
-                detailTextView.text = "ID: ${post?.id}\nTitle: ${post?.title}\nBody: ${post?.body}\nUser ID: ${post?.userId}"
+                if (response.isSuccessful) {
+                    val post = response.body()
+                    titleView.text = post?.title ?: "No Title"
+                    bodyView.text = post?.body ?: "No Body"
+                } else {
+                    titleView.text = "Error"
+                    bodyView.text = "Failed to load post"
+                }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                Toast.makeText(this@DetailActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+                titleView.text = "Error"
+                bodyView.text = t.message ?: "Unknown error"
             }
         })
     }
 
-    private fun fetchComment(id: Int) {
+    private fun fetchComment(id: Int, titleView: TextView, bodyView: TextView) {
         RetrofitInstance.apiInterface.getCommentById(id).enqueue(object : Callback<Comment> {
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
-                val comment = response.body()
-                detailTextView.text = "ID: ${comment?.id}\nName: ${comment?.name}\nEmail: ${comment?.email}\nBody: ${comment?.body}\nPost ID: ${comment?.postId}"
+                if (response.isSuccessful) {
+                    val comment = response.body()
+                    titleView.text = comment?.name ?: "No Name"
+                    bodyView.text = comment?.body ?: "No Body"
+                } else {
+                    titleView.text = "Error"
+                    bodyView.text = "Failed to load comment"
+                }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFailure(call: Call<Comment>, t: Throwable) {
-                Toast.makeText(this@DetailActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+                titleView.text = "Error"
+                bodyView.text = t.message ?: "Unknown error"
             }
         })
     }
 
-    private fun fetchAlbum(id: Int) {
+    private fun fetchAlbum(id: Int, titleView: TextView, bodyView: TextView) {
         RetrofitInstance.apiInterface.getAlbumById(id).enqueue(object : Callback<Album> {
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<Album>, response: Response<Album>) {
-                val album = response.body()
-                detailTextView.text = "ID: ${album?.id}\nTitle: ${album?.title}\nUser ID: ${album?.userId}"
+                if (response.isSuccessful) {
+                    val album = response.body()
+                    titleView.text = album?.title ?: "No Title"
+                    bodyView.text = "Album ID: ${album?.id}"
+                } else {
+                    titleView.text = "Error"
+                    bodyView.text = "Failed to load album"
+                }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFailure(call: Call<Album>, t: Throwable) {
-                Toast.makeText(this@DetailActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+                titleView.text = "Error"
+                bodyView.text = t.message ?: "Unknown error"
             }
         })
     }
 
-    private fun fetchPhoto(id: Int) {
+    private fun fetchPhoto(id: Int, titleView: TextView, bodyView: TextView) {
         RetrofitInstance.apiInterface.getPhotoById(id).enqueue(object : Callback<Photo> {
             @SuppressLint("SetTextI18n")
-            override fun onResponse(call: Call<Photo>, response: Response<Photo>) {
-                val photo = response.body()
-                detailTextView.text = "ID: ${photo?.id}\nTitle: ${photo?.title}\nURL: ${photo?.url}\nThumbnail: ${photo?.thumbnailUrl}\nAlbum ID: ${photo?.albumId}"
+            override fun onResponse(call: Call<com.android.androidretrofit.model.Photo>, response: Response<com.android.androidretrofit.model.Photo>) {
+                if (response.isSuccessful) {
+                    val photo = response.body()
+                    titleView.text = photo?.title ?: "No Title"
+                    bodyView.text = "URL: ${photo?.url}"
+                } else {
+                    titleView.text = "Error"
+                    bodyView.text = "Failed to load photo"
+                }
             }
 
-            override fun onFailure(call: Call<Photo>, t: Throwable) {
-                Toast.makeText(this@DetailActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+            @SuppressLint("SetTextI18n")
+            override fun onFailure(call: Call<com.android.androidretrofit.model.Photo>, t: Throwable) {
+                titleView.text = "Error"
+                bodyView.text = t.message ?: "Unknown error"
             }
         })
     }
 
-    private fun fetchTodo(id: Int) {
+    private fun fetchTodo(id: Int, titleView: TextView, bodyView: TextView) {
         RetrofitInstance.apiInterface.getTodoById(id).enqueue(object : Callback<Todo> {
             @SuppressLint("SetTextI18n")
-            override fun onResponse(call: Call<Todo>, response: Response<Todo>) {
-                val todo = response.body()
-                detailTextView.text = "ID: ${todo?.id}\nTitle: ${todo?.title}\nCompleted: ${todo?.completed}\nUser ID: ${todo?.userId}"
+            override fun onResponse(call: Call<com.android.androidretrofit.model.Todo>, response: Response<com.android.androidretrofit.model.Todo>) {
+                if (response.isSuccessful) {
+                    val todo = response.body()
+                    titleView.text = todo?.title ?: "No Title"
+                    bodyView.text = "Completed: ${todo?.completed}"
+                } else {
+                    titleView.text = "Error"
+                    bodyView.text = "Failed to load todo"
+                }
             }
 
-            override fun onFailure(call: Call<Todo>, t: Throwable) {
-                Toast.makeText(this@DetailActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+            @SuppressLint("SetTextI18n")
+            override fun onFailure(call: Call<com.android.androidretrofit.model.Todo>, t: Throwable) {
+                titleView.text = "Error"
+                bodyView.text = t.message ?: "Unknown error"
             }
         })
     }
 
-    private fun fetchUser(id: Int) {
+    private fun fetchUser(id: Int, titleView: TextView, bodyView: TextView) {
         RetrofitInstance.apiInterface.getUserById(id).enqueue(object : Callback<User> {
             @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<User>, response: Response<User>) {
-                val user = response.body()
-                detailTextView.text = "ID: ${user?.id}\nName: ${user?.name}\nUsername: ${user?.username}\nEmail: ${user?.email}\nPhone: ${user?.phone}\nWebsite: ${user?.website}\nAddress: ${user?.address?.street}, ${user?.address?.city}\nCompany: ${user?.company?.name}"
+                if (response.isSuccessful) {
+                    val user = response.body()
+                    titleView.text = user?.name ?: "No Name"
+                    bodyView.text = "Email: ${user?.email}"
+                } else {
+                    titleView.text = "Error"
+                    bodyView.text = "Failed to load user"
+                }
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFailure(call: Call<User>, t: Throwable) {
-                Toast.makeText(this@DetailActivity, t.localizedMessage, Toast.LENGTH_SHORT).show()
+                titleView.text = "Error"
+                bodyView.text = t.message ?: "Unknown error"
             }
         })
     }

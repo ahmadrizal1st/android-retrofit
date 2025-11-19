@@ -1,4 +1,4 @@
-package com.android.androidretrofit
+package com.android.androidretrofit.model
 
 data class Company(
     val name: String,

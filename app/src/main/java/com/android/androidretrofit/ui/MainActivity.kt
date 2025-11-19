@@ -1,9 +1,10 @@
-package com.android.androidretrofit
+package com.android.androidretrofit.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.android.androidretrofit.R
 
 class MainActivity : AppCompatActivity() {
 

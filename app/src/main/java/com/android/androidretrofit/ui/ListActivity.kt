@@ -1,4 +1,4 @@
-package com.android.androidretrofit
+package com.android.androidretrofit.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,14 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.androidretrofit.R
+import com.android.androidretrofit.api.RetrofitInstance
+import com.android.androidretrofit.model.Album
+import com.android.androidretrofit.model.Comment
+import com.android.androidretrofit.model.Photo
+import com.android.androidretrofit.model.Post
+import com.android.androidretrofit.model.Todo
+import com.android.androidretrofit.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,7 +42,7 @@ class ListActivity : AppCompatActivity() {
         listView.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("dataType", dataType)
-            intent.putExtra("id", position + 1) // Assuming IDs start from 1
+            intent.putExtra("itemId", position + 1) // Assuming IDs start from 1
             startActivity(intent)
         }
     }

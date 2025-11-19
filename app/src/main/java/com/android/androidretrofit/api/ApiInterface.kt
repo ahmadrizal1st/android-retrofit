@@ -1,14 +1,19 @@
-package com.android.androidretrofit
+package com.android.androidretrofit.api
 
+import com.android.androidretrofit.model.Album
+import com.android.androidretrofit.model.Comment
+import com.android.androidretrofit.model.Photo
+import com.android.androidretrofit.model.Post
+import com.android.androidretrofit.model.ResponseData
+import com.android.androidretrofit.model.Todo
+import com.android.androidretrofit.model.User
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface ApiInterface {
-    // Posts
-    @GET("/posts/1")
-    fun getData(): Call<ResponseData>
 
+    // Posts
     @GET("/posts")
     fun getAllPosts(): Call<List<Post>>
 
